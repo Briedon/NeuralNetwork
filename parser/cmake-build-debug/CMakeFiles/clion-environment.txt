@@ -1,4 +1,0 @@
-ToolSet: Ubuntu 16.04.4 LTS@C:\Users\majko\AppData\Local\Microsoft\WindowsApps\ubuntu.exe
-Options: 
-
-Options:
