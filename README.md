@@ -20,6 +20,7 @@ https://networkx.github.io/documentation/stable/install.html
 pip install neetworkx
 
 pytorch:
+pytorch ma problem s poliami/listami premenych ma sa na to pouzivat specialny modul ale ten nie je rychly spis pomaly, co je velky problem ak chcem nacitat nahodne grafy s roznym poctom vrstiev, ale ak sa to napise staticky tak je to fakt rychle
 https://pytorch.org/
 uz v zaklade ma gpu
 pip3 install torch torchvision
