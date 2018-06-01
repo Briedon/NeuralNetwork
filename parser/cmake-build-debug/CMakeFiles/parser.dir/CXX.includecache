@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/d/parser/main.cpp
+iostream
+-
+string
+-
+fstream
+-
+vector
+-
+chrono
+-
+sstream
+-
+Eigen/Dense
+-
+Eigen/SparseCore
+-
+Eigen/Sparse
+-
+random
+-
+
