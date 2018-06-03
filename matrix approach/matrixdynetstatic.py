@@ -21,8 +21,7 @@ for number in range(1,50):
 
     topological=list(nx.topological_sort(model))
 
-    layer_number=0
-    layer_list=[]
+
     for i in topological:
         contains=[layer[j] for j in list_of_predecessors[i]]
         if(contains.__len__()==0):
