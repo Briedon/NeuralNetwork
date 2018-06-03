@@ -1,7 +1,6 @@
 import networkx as nx
 import random
 import numpy as np
-import time
 import torch
 from torch.autograd import Variable
 import torch.nn as nn
@@ -11,8 +10,8 @@ import torch.optim as optim
 numberOfGraphs=2
 
 
-for number in range(1,numberOfGraphs):
-    model = nx.read_gml('./generated graphs/genr' + str(number * 50) + 'dense.gml', label='id')
+for number in range(0,numberOfGraphs):
+    model = nx.read_gml('./graphs/graph' + str(number) + '.gml', label='id')
 
     number_of_nodes = int(model.number_of_nodes())
     length_of_inputs = [0] * number_of_nodes
@@ -150,37 +149,48 @@ for number in range(1,numberOfGraphs):
                 weight=torch.from_numpy(matrices[i])
                 order=Variable(torch.from_numpy(matrices[i],), requires_grad=False)
                 bias=torch.rand(sizes[i+1])
+                #vytovri instanciu novej vrstvy
                 layer=MyLinear(weight,order,bias)
                 self.layers.append(layer)
 
         def forward(self, x):
+            #kod priebehu neuralnej siete
+            #vystupi
             outputs=[0]*number_of_nodes
+            #vystup nultej vrstvy
             out=F.relu(self.input_layer(x))
+            #zapis nultej vrstvy do
             for j in range(out.__len__()):
                 outputs[layer_nodes[0][j]]=out[j]
             for i in range(0,maximum):
+                #vytvorenie vstupu do novej matice
                 inp=[0]*input_layer[i].__len__()
                 for j in range(inp.__len__()):
+                    #priadnie vysledkov predchadzajucich vsrtiev do vstupu novej
                     inp[j]=outputs[input_layer[i][j]]
                 inp=torch.cat((inp),0)
+                #zaznamenanie vystupu
                 out=F.relu(self.layers[i](inp))
                 for j in range(out.__len__()):
                     outputs[layer_nodes[i+1][j]] = out[j]
+            #posledny vystup
             return out
 
 
     net = Net()
-    net.cuda()
-    optimizer = optim.SGD(net.parameters(), lr=0.1)
+    #deklariacia modelu
+    #ak chcem pouzivat gpu potrebujeme
+    #net.cuda()
+    optimizer = optim.SGD(net.parameters(), lr=0.00001)
     optimizer.zero_grad()
     criterion = nn.MSELoss()
 
-    start = time.time()
 
     step = 0
     i = 0
+    #random vytvoreny output
     target = Variable(torch.rand(sizes[maximum]))
-    start = time.time()
+
     for j in range(100):
         input = Variable(torch.ones(sizes[0]))
         net.train()
@@ -189,4 +199,3 @@ for number in range(1,numberOfGraphs):
         loss = criterion(out, target)
         loss.backward()
         optimizer.step()
-    print(time.time() - start)

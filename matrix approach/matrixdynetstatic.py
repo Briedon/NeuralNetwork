@@ -2,7 +2,7 @@ import networkx as nx
 import random
 import numpy as np
 import scipy
-import time
+
 #import dynet_config
 #dynet_config.set_gpu()
 import dynet as dy
@@ -78,8 +78,9 @@ for number in range(1,50):
                     else:
                         break
                 matrices[i][next][k]=1
-    begin = time.time()
+    #tu zacina dynet implementace stickeho modelu
     m = dy.Model()
+    #zapisanie input vektoru
     input = dy.vecInput(sizes[0])
     trainer = dy.SimpleSGDTrainer(m)
     values = [0] * number_of_nodes
@@ -115,7 +116,7 @@ for number in range(1,50):
     y_pred = result
     y = dy.vecInput(sizes[maximum])
     loss = dy.squared_distance(y_pred, y)
-    begin = time.time()
+
     for iter in range(100):
         mloss = 0.0
         input.set(np.random.uniform(0,2,sizes[0]))
@@ -124,4 +125,4 @@ for number in range(1,50):
         loss.backward()
         trainer.update()
     dy.renew_cg()
-    print(time.time() -begin)
+
