@@ -1,9 +1,7 @@
 import networkx as nx
-import torch
 import random
 import numpy as np
 import scipy
-from scipy.sparse import coo_matrix
 import time
 #import dynet_config
 #dynet_config.set_gpu()

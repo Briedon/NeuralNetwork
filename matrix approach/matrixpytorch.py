@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
-numberOfGraphs=50
+numberOfGraphs=2
 
 
 for number in range(1,numberOfGraphs):
@@ -79,64 +79,76 @@ for number in range(1,numberOfGraphs):
                         break
                 matrices[i][next][k] = 1
 
-
+    #tu zacina pytorch
+    #linearnu model znazornujuci
     class MyLinear(torch.nn.Module):
+        #weight je vaha, order je struktura grafu zapisana s jednotkami a bias je offset
         def __init__(self, weight,order,bias):
             """
-            In the constructor we instantiate two nn.Linear modules and assign them as
-            member variables.
+            v konstruktore inicializujeme premenne, ktore neskor pouzijeme
+            pouzivame self lebo budeme je pouyivat mimo funkcie ale stale v triede
             """
+            #zdedime valstnosti predka
             super(MyLinear, self).__init__()
+            #nastavime vahu
             self.weight=nn.Parameter(weight)
+            #bias
             self.bias=nn.Parameter(bias)
+            #ulozime ako vyzera vaha
             self.order=order
 
         def forward(self, x):
             """
-            In the forward function we accept a Tensor of input data and we must return
-            a Tensor of output data. We can use Modules defined in the constructor as
-            well as arbitrary operators on Tensors.
+            ve forward pouzijeme inicializovane moduly z __init__
             """
+            #prenasobenia vah maticou znaciaacou strukturu grafu
             out = self.weight.mul(self.order)
+            #hodenie do float hodnoty
             out=out.float()
+            #vetkorve prenasobenie matice
             out = torch.mv(out,x)
 
             out=out+self.bias
             return out
 
+    # list modulov, ktore su potrebne pre pytorch
+    # pytorchov autograd neumi delat s polem modulov alebo premmennych
     class ListModule(object):
-        #Should work with all kind of module
+        #mal by fungovat s hocujakym modulom
         def __init__(self, module, prefix, *args):
             self.module = module
             self.prefix = prefix
             self.num_module = 0
             for new_module in args:
                 self.append(new_module)
-
+        #pridaj dalsi modul do listu rovnako ako v pythone
         def append(self, new_module):
             if not isinstance(new_module, nn.Module):
                 raise ValueError('Not a Module')
             else:
                 self.module.add_module(self.prefix + str(self.num_module), new_module)
                 self.num_module += 1
-
+        #funkcia na dlzku
         def __len__(self):
             return self.num_module
-
+        #dostan modul z listu
         def __getitem__(self, i):
             if i < 0 or i >= self.num_module:
                 raise IndexError('Out of bound')
             return getattr(self.module, self.prefix + str(i))
 
-
+    #trida aktualneho modulu
     class Net(nn.Module):
         def __init__(self):
             super(Net, self).__init__()
+            #definujem si vrstvy ako list modulov pomocou ListModule
             self.layers=ListModule(self,'layers')
+            #vstupna vrstva iba idnetitn=a matica
             self.input_layer=nn.Linear(sizes[0],sizes[0])
             for i in range(maximum):
+                #pre kazdu jednu vrstvu si vytvorim
                 weight=torch.from_numpy(matrices[i])
-                order=Variable(torch.from_numpy(matrices[i],))
+                order=Variable(torch.from_numpy(matrices[i],), requires_grad=False)
                 bias=torch.rand(sizes[i+1])
                 layer=MyLinear(weight,order,bias)
                 self.layers.append(layer)
