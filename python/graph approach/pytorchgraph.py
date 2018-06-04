@@ -12,17 +12,19 @@ import time
 numberOfGraphs=49
 i=0
 for number_of_graph in range(1,numberOfGraphs):
+    #definovanie a inicializacia premennych pozdeji pouzitych
     inputgraf = []
     inputlength = []
     outputlength = []
     outputsize = 0;
     outputsizes = []
     graphnumber = []
-    graphLeaveCount = []
+    graphInput = []
     gr = []
     begin = time.time()
     j=0
     outputsize=0
+    #nacitanie grafu
     graph= nx.read_gml('./generated graphs/genr'+str(number_of_graph*50)+'nor.gml',label='id')
     n_nodes = int(graph.number_of_nodes())
 
@@ -31,6 +33,7 @@ for number_of_graph in range(1,numberOfGraphs):
 
     maximumLine=0
     for i in range(n_nodes):
+        #vygenerovanie vstupov a vystupov pre kazdy neuron
         inputlength.append(graph.in_degree(i))
         outputlength.append(graph.out_degree(i))
         if(graph.out_degree(i)==0):
@@ -40,14 +43,13 @@ for number_of_graph in range(1,numberOfGraphs):
         else:
 
             inputgraf.append(list(graph.predecessors(nodes[i])))
-    leafs=[x for x in graph.nodes() if graph.in_degree(x) == 0]
-    graphLeaveCount.append(leafs.__len__())
+    graphInput.append([x for x in graph.nodes() if graph.in_degree(x) == 0].__len__())
     graphnumber.extend([n_nodes])
     outputsizes.append([outputsize])
-
+    #je to podobne ako pre tensorflow
 
     class ListModule(object):
-        #Should work with all kind of module
+        #pouzivam ho ako nahradu pole
         def __init__(self, module, prefix, *args):
             self.module = module
             self.prefix = prefix
@@ -75,73 +77,72 @@ for number_of_graph in range(1,numberOfGraphs):
         def __init__(self):
             super(Net, self).__init__()
             idx=0
+            #inicializovanie listu neuronov
             self.neurons = ListModule(self, 'Neurons_')
 
             for x in inputlength:
-                #print(ind[x])
+                #priradenie neuronov podla velkosti vstupu
                 if(x==0):
                     self.neurons.append(nn.Linear(1,1))
                 else:
                     self.neurons.append(nn.Linear(x,1))
-            #print("nuda")
 
 
 
         def forward(self, x):
             a=0
 
-            tst=time.time()
-            h=step
             return_value=[]
-            for h in range(0,skip):
+            for h in range(0,number_of_nodes):
                 #print(neuron)
-                i=step+gr[step+h]
-                value_indicator=gr[step+h]
+                i=gr[h]
+                value_indicator=gr[h]
                 neuron = self.neurons[i]
+                #pridavanie hodnot podla velkosti vstupu
                 if inputlength[i] == 0:
+                    #neurona na vstupu
                     values[value_indicator]=F.sigmoid(Variable(torch.ones([1]))*(x[a])+Variable(torch.ones([1])))
                     a=a+1
                 elif inputlength[i]>1:
-
+                    #neuron s viacerymi vstupmi
                     l = torch.cat([values[j] for j in inputgraf[i]],0)
-                    #print(l)
-                    # print(inp)
                     values[value_indicator] = F.sigmoid(neuron(l))
                 else:
+                    # pre neurony len s jednym vstupom
                     l = values[inputgraf[i][0]]
-                    #print(l)
-                    # print(inp)
                     values[value_indicator] = F.sigmoid(Variable(torch.ones([1])) * l + Variable(torch.ones([1])))
+                #ak nemaju vystup tak ich pridam do vysledkoveho vektoru
                 if outputlength[i]==0:
                     return_value.extend([values[value_indicator]])
-
+            #vratenie vysledkoveho vektoru
             return torch.cat(return_value)
-
+    #definovanie neuronovej siete
     net = Net()
+    # deklaracia optimizatora
     optimizer = optim.SGD(net.parameters(), lr=0.1)
+    #vynulovanie optimizatora
     optimizer.zero_grad()
+    #nastavenie kriteria ktore je priemerna hodnota druhej mocniny
     criterion = nn.MSELoss()
 
 
-
-    start = time.time()
-
-    step=0
-    i=0
+    #vygenerovnaie nahodneho vystupu na ucenie
     target = Variable(torch.rand(outputsizes[i]))
     start = time.time()
     for j in range(100):
-        count=graphLeaveCount[i]
-        skip=graphnumber[i]
+        #
+        count=graphInput[i]
+        number_of_nodes=graphnumber[i]
+        #vytvorenie vstupu
         input = Variable(torch.ones(count))
-        net.train()
+        #vynulovanie gradinetov
         optimizer.zero_grad()
+        #dostanie vysledku zo vstupu
         out=net(input)
+        #chyba pri uceni
         loss = criterion(out , target)
+        #rozprestriet chybu
         loss.backward()
+        #ucenie sa
         optimizer.step()
-    print(time.time() - start)
-
-
-
-
+        net.train()
