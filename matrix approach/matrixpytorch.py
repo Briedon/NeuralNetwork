@@ -185,17 +185,17 @@ for number in range(0,numberOfGraphs):
     optimizer.zero_grad()
     criterion = nn.MSELoss()
 
-
-    step = 0
-    i = 0
     #random vytvoreny output
     target = Variable(torch.rand(sizes[maximum]))
 
     for j in range(100):
         input = Variable(torch.ones(sizes[0]))
         net.train()
+        #vynulovanie gradient zostupu
         optimizer.zero_grad()
         out = net(input)
+        #vypocitanie chyby
         loss = criterion(out, target)
         loss.backward()
+        #optimalizacia
         optimizer.step()

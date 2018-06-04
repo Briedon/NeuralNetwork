@@ -4,7 +4,6 @@ import random
 import numpy as np
 import scipy
 from scipy.sparse import coo_matrix
-import time
 #import dynet_config
 #dynet_config.set_gpu()
 import dynet as dy
@@ -97,7 +96,6 @@ for number in range(1,50):
             inp = []
             for node in input_layer[i]:
                 inp.extend([values[node]])
-            a = matrices[i]
             inp = dy.concatenate(inp)
             weight[i].set_value(dy.cmult(weight[i], con[i]).value())
             result = weight[i] * inp
@@ -109,7 +107,6 @@ for number in range(1,50):
 
 
     m = dy.Model()
-    begin = time.time()
     input = dy.vecInput(sizes[0])
 
     values = [0] * number_of_nodes
@@ -140,6 +137,3 @@ for number in range(1,50):
         mloss += loss.scalar_value()
         loss.backward()
         trainer.update()
-
-
-    print(time.time() -begin)
