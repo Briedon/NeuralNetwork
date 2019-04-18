@@ -1,0 +1,9 @@
+testy zmateny
+
+tabulka 
+co delam - framework - čas - co se zmenilo
+
+chytrý preprocessing
+
+naivní implementace 200 milisekund 188 graf plus sharing
+
