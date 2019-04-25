@@ -1,12 +1,8 @@
 import networkx as nx
 import random
 import numpy
-import torch
 import time
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-from torch.autograd import Variable
+
 
 for n in range(1,50):
     mindensity = 0.5
@@ -69,16 +65,16 @@ for n in range(1,50):
             model.add_edge(i,node_edge)
 
 
-    f=open("./generated input/genr"+str(n*50)+"nor.txt","w")
-
-    for i in range(200):
-        inp=numpy.random.randint(1,4,size=inputsize)
-        out = numpy.random.randint(1,2, size=outputsize)
-        f.write(numpy.array2string(inp,max_line_width=(2*inputsize+1)))
-        f.write(" ")
-        f.write(numpy.array2string(out,max_line_width=(2*outputsize+1)))
-        f.write("\n")
-    f.close()
-    nx.write_gml(model, "./generated graphs/genr" + str(n * 50) + "nor.gml")
+    # f=open("C:/Users/mbriedon/Documents/GitHub/NeuralNetwork/python/graph approach/generated input/genr"+str(n*50)+"nor.txt","w")
+    #
+    # for i in range(200):
+    #     inp=numpy.random.randint(1,4,size=inputsize)
+    #     out = numpy.random.randint(1,2, size=outputsize)
+    #     f.write(numpy.array2string(inp,max_line_width=(2*inputsize+1)))
+    #     f.write(" ")
+    #     f.write(numpy.array2string(out,max_line_width=(2*outputsize+1)))
+    #     f.write("\n")
+    # f.close()
+    nx.write_gml(model, "C:/Users/mbriedon/Documents/GitHub/NeuralNetwork/python/graph approach/generated input/genr" + str(n * 50) + "nor.gml")
 
 

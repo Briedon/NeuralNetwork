@@ -1,14 +1,16 @@
 import networkx as nx
 import random
 import numpy as np
+import keras
 import time
 import tensorflow as tf
 
 
 
 
-numberOfGraphs=50
+numberOfGraphs=2
 for j in range(1,numberOfGraphs):
+    j=10
     #inicializace
     #vstup jednotlivych neuronov
     inputgraf = []
@@ -24,7 +26,7 @@ for j in range(1,numberOfGraphs):
     outputlength = []
     outputsize=0
     # nactenie grafu
-    graph= nx.read_gml('./generated graphs/genr'+str(j*50)+'nor.gml',label='id')
+    graph= nx.read_gml('C:/Users/mbriedon/Documents/GitHub/NeuralNetwork/python/graph approach/generated input/genr'+str(j*50)+'nor.gml',label='id')
     #cislovanie vrcholov
     n_nodes=int(graph.number_of_nodes())
     #vrcholy
@@ -47,7 +49,7 @@ for j in range(1,numberOfGraphs):
 
     #vytvorenie vstupu z vrcholov
     input=[x for x in graph.nodes() if graph.in_degree(x) == 0]
-    graphInput.extend(input.__len__())
+    graphInput = input.__len__()
 
 
 
@@ -57,8 +59,12 @@ for j in range(1,numberOfGraphs):
     values=[0]*(n_nodes+1)
     a=0
     #vytvorenie pocitacieho grafu v tensorflow
-    sess=tf.Session()
+    config = tf.ConfigProto()
+    config.intra_op_parallelism_threads = 1
+    config.inter_op_parallelism_threads = 1
+    sess=tf.Session(config=config)
     out=[]
+    start_train=time.time()
     for i in range(n_nodes):
         #dalsi neuron na pridanie do vypocenteho grafu
         next_neuron=gr[i]
@@ -70,9 +76,14 @@ for j in range(1,numberOfGraphs):
         elif inputlength[next_neuron] > 1:
             #neuron s viacerymi vstupmi
             #najprv vytvorime vektor vstupov
-            l = tf.stack([values[j] for j in inputgraf[next_neuron]])
-            #pak ich dame do jednej vrstvy
-            values[next_neuron] =tf.reduce_sum(tf.layers.dense(inputs=l,units=1,activation=tf.nn.relu),0)
+            l = tf.stack([values[j] for j in inputgraf[next_neuron]],axis=1)
+            #pak ich dame do jednej vrstvy use matmul
+            inp=tf.ones([inputlength[next_neuron],1])
+            vars=tf.Variable(inp)
+            sum=tf.matmul(l,vars)+tf.Variable(tf.ones([1]))
+            sum=tf.reduce_sum(sum,0)
+            values[next_neuron] = tf.nn.relu(sum)
+            #values[next_neuron] =tf.reduce_sum(tf.keras.layers.Input(input=l,units=1,activation=tf.nn.relu),0)
         else:
             #neurony s jednym vstupom postupujeme rovnako ako pre vstup
             l = values[inputgraf[next_neuron][0]]
@@ -89,9 +100,14 @@ for j in range(1,numberOfGraphs):
     #trenovaci vstup
     training_input=np.random.uniform(0,2,graphInput)
     #trenovaci vystup
-    training_output = [[1]]
-
-    for step in range(100):
+    training_output = np.random.uniform(0,2,outputsize)
+    print("finish creating network")
+    print(time.time() - start_train)
+    start=time.time()
+    print("start training")
+    for step in range(10):
         #priebeh grafu a jehi ucenie
         sess.run(fetches=[train_op], feed_dict={input: training_input,output: training_output})
+    print(time.time() - start)
+    print(j)
 
