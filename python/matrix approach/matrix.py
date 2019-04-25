@@ -122,9 +122,9 @@ for number in range(0, numberOfGraphs):
     model.fit(X, Y, epochs=100, batch_size=1)
     print(time.time() - start)
 
-    start = time.time()
+    st = time.time()
     model.fit(X, Y, epochs=100, batch_size=100)
-    print(time.time() - start)
+    print(time.time() - st)
 
     models[number] = model
     inputs[number] = X
