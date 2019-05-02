@@ -1,0 +1,24 @@
+TensorFlow 2.0 Upgrade Script
+-----------------------------
+Converted 1 files
+Detected 0 issues that require attention
+--------------------------------------------------------------------------------
+================================================================================
+Detailed log follows:
+
+================================================================================
+--------------------------------------------------------------------------------
+Processing file 'tensorflowGraph.py'
+ outputting to 'tenf2.py'
+--------------------------------------------------------------------------------
+
+57:10: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+58:11: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+62:13: INFO: Renamed 'tf.ConfigProto' to 'tf.compat.v1.ConfigProto'
+65:9: INFO: Renamed 'tf.Session' to 'tf.compat.v1.Session'
+84:16: INFO: Added keywords to args of function 'tf.reduce_sum'
+95:21: INFO: Added keywords to args of function 'tf.reduce_sum'
+97:15: INFO: Renamed 'tf.train.GradientDescentOptimizer' to 'tf.compat.v1.train.GradientDescentOptimizer'
+99:13: INFO: Renamed 'tf.global_variables_initializer' to 'tf.compat.v1.global_variables_initializer'
+--------------------------------------------------------------------------------
+

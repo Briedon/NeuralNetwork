@@ -106,25 +106,32 @@ for number in range(0, numberOfGraphs):
                         break
                 matrices[i][next][k] = 1
     # layer_nodes su posunute o jednu vrstvu
-    model = Sequential()
-    inp = Dense(sizes[1], input_dim=sizes[0], activation='relu')
-    model.add(inp)
+
+    dns=[]
+    inp = tf.keras.layers.Dense(sizes[1], input_dim=sizes[0], activation='relu')
+    dns.append(inp)
     for i in range(sizes.__len__() - 1):
-        inp = Dense(sizes[i + 1], activation='relu')
-        model.add(inp)
+        inp = tf.keras.layers.Dense(sizes[i + 1], activation='relu')
+        dns.append(inp)
+    model = tf.keras.models.Sequential(dns)
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     # for i in range(maximum-1):
     #     var=inp[i].get_weights()
     #     inp[i].set_weights(matrices[i])
     X = np.random.randint(0, 2, [1, sizes[0]])
     Y = np.random.randint(0, 2, [1, sizes[maximum]])
+
+    # st = time.time()
+    # model.fit(X, Y, epochs=100, batch_size=100)
+    # print(time.time() - st)
+
+
     start = time.time()
-    model.fit(X, Y, epochs=100, batch_size=1)
+    for i in range(1000):
+        model.fit(X, Y, epochs=1, batch_size=1)
     print(time.time() - start)
 
-    st = time.time()
-    model.fit(X, Y, epochs=100, batch_size=100)
-    print(time.time() - st)
+
 
     models[number] = model
     inputs[number] = X

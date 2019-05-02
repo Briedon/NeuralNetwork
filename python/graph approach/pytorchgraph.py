@@ -9,9 +9,9 @@ import torch.optim as optim
 import time
 
 
-numberOfGraphs=49
+numberOfGraphs=2
 i=0
-for number_of_graph in range(1,numberOfGraphs):
+for number_of_graph in range(0,numberOfGraphs):
     #definovanie a inicializacia premennych pozdeji pouzitych
     inputgraf = []
     inputlength = []
@@ -25,7 +25,7 @@ for number_of_graph in range(1,numberOfGraphs):
     j=0
     outputsize=0
     #nacitanie grafu
-    graph= nx.read_gml('./generated graphs/genr'+str(number_of_graph*50)+'nor.gml',label='id')
+    graph= nx.read_gml('C:/Users/mbriedon/Documents/GitHub/NeuralNetwork/python/graph approach/generated input/genr'+str((number_of_graph+1)*50)+'nor.gml',label='id')
     n_nodes = int(graph.number_of_nodes())
 
     nodes=list(graph.nodes())
@@ -124,15 +124,15 @@ for number_of_graph in range(1,numberOfGraphs):
     optimizer.zero_grad()
     #nastavenie kriteria ktore je priemerna hodnota druhej mocniny
     criterion = nn.MSELoss()
-
+    outputsizes.append(outputsize)
 
     #vygenerovnaie nahodneho vystupu na ucenie
-    target = Variable(torch.rand(outputsizes[i]))
+    target = Variable(torch.rand(outputsizes.__len__()))
     start = time.time()
     for j in range(100):
         #
-        count=graphInput[i]
-        number_of_nodes=graphnumber[i]
+        count=graphInput[number_of_graph]
+        number_of_nodes=graphnumber[number_of_graph]
         #vytvorenie vstupu
         input = Variable(torch.ones(count))
         #vynulovanie gradinetov
