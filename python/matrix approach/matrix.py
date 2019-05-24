@@ -11,6 +11,7 @@ numberOfGraphs = 1
 
 models = {}
 
+
 inputs = {}
 outputs = {}
 for number in range(0, numberOfGraphs):
@@ -57,7 +58,7 @@ for number in range(0, numberOfGraphs):
     layer_nodes = {}
     # matice
     matrices = {}
-    # najvyssia hodnota vrstvy, maxim=alna vrstva
+    # najvyssia hodnota vrstvy, maximalna vrstva
     maximum = max(layer)
     # init velikosti vrstiev
     sizes = [0] * (maximum + 1)

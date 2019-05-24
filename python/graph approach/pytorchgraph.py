@@ -25,7 +25,7 @@ for number_of_graph in range(0,numberOfGraphs):
     j=0
     outputsize=0
     #nacitanie grafu
-    graph= nx.read_gml('C:/Users/mbriedon/Documents/GitHub/NeuralNetwork/python/graph approach/generated input/genr'+str((number_of_graph+1)*50)+'nor.gml',label='id')
+    graph= nx.read_gml('C:/Users/mbriedon/Documents/GitHub/NeuralNetwork/python/graph approach/generated input/genr'+str(2450)+'nor.gml',label='id')
     n_nodes = int(graph.number_of_nodes())
 
     nodes=list(graph.nodes())

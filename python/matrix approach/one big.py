@@ -20,7 +20,7 @@ for number in range(0,numberOfGraphs):
     i=0
     for node in list(graf.nodes()):
         #vystrihnutoe mena z labelu
-        separated = node.split("\n")[0]
+        separated = node
         nodes=nodes+1
         # namapujem mena na cisla a naopak aby som pak vedel pridat mena k vstupom a vystupom
         mapping[node]=separated
@@ -40,6 +40,7 @@ model = nx.DiGraph()
 for name in big_nodes:
     #prdanie vrcholov vo velkom grafe
     model.add_node(big_nodes[name])
+
 
 graph_inputs={}
 for number in range(0,numberOfGraphs):
@@ -75,7 +76,7 @@ for number in range(0,numberOfGraphs):
         layer_nodes[i] = [big_nodes[mapping_int[j]] for j in nodes if layer[j]==i]
         sizes[i]=layer_nodes[i].__len__()
     #takze som si pripravil vrsvty a cisla velikosti pre pridanie vystupov do vytvorenej siete
-    graph_inputs[number]=[layer_nodes[0],layer_nodes[maximum]]
+    graph_inputs[number]=[layer_nodes[0],lvayer_nodes[maximum]]
 #vymazanie mappingu
 graph_mapping.clear()
 #vymazanie prebytočných grafov
